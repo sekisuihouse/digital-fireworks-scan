@@ -48,6 +48,12 @@ export const UI_ICONS = {
     <rect x="3.4" y="4.6" width="17.2" height="14.8" rx="2.4" stroke="currentColor" stroke-width="1.9"/>
     <path d="M3.6 15.4l4.6-4.2 3.6 3.2 3.2-2.8 5.4 4.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="8.6" cy="9.1" r="1.4" fill="currentColor"/>`),
+  camera: svg(`
+    <path d="M3.5 8.2c0-1 .8-1.8 1.8-1.8h2.3l1.5-2.2h5.8l1.5 2.2h2.3c1 0 1.8.8 1.8 1.8v9.6c0 1-.8 1.8-1.8 1.8H5.3c-1 0-1.8-.8-1.8-1.8V8.2Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>
+    <circle cx="12" cy="12.8" r="3.6" stroke="currentColor" stroke-width="1.9"/>`),
+  print: svg(`
+    <path d="M7 9V3.8h10V9M7 17H4.5V9.5h15V17H17" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>
+    <path d="M7 14h10v6.2H7V14Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>`),
   brush: svg(`
     <path d="M6.5 14.5c-1.8.5-2.4 2.2-2.6 4.6 2.6-.2 4.2-.9 4.7-2.7" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>
     <path d="M9.4 16.1 7.4 14.1 16.9 4.6l2.5 2.5-10 9Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>`),

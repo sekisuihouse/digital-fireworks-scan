@@ -819,6 +819,90 @@ button, input { font-family: inherit; }
 .tpl-hint { font-size: 11px; color: var(--fg-dim); line-height: 1.45; }
 .tpl-count { font-size: 11px; color: var(--ds-green-2); font-weight: 700; margin-top: 2px; }
 
+/* ============================ しゃしんから つくる ============================ */
+
+.scan-steps {
+  margin: 2px 0 18px;
+  padding-left: 1.6em;
+  line-height: 1.8;
+  font-size: 15px;
+}
+.scan-steps b { color: var(--ds-green-2); }
+.scan-pick { display: flex; flex-wrap: wrap; gap: 12px; }
+.scan-pick .btn { flex: 1 1 220px; justify-content: center; }
+.scan-print {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin: 18px 0 16px;
+  font-size: 13px;
+  color: var(--fg-dim);
+}
+.scan-busy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 70px 0;
+  font-size: 17px;
+  font-weight: 700;
+}
+.scan-spinner {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 3px solid var(--green-tint-2);
+  border-top-color: var(--ds-green-2);
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.scan-result {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 18px;
+}
+.scan-col { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.scan-label { font-size: 13px; font-weight: 700; color: var(--fg-dim); letter-spacing: 0.08em; }
+.scan-photo-wrap,
+.scan-preview-wrap {
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--night);
+  display: grid;
+  place-items: center;
+}
+.scan-photo { display: block; cursor: move; touch-action: none; }
+.scan-preview { display: block; }
+.scan-adjust { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.scan-adjust-label { font-size: 12px; font-weight: 700; color: var(--fg-dim); }
+.scan-range { flex: 1 1 120px; accent-color: var(--ds-green-2); }
+.scan-toggle.is-on { background: var(--ds-green-2); color: var(--ds-white); }
+.scan-note { margin: 0; font-size: 12px; color: var(--fg-dim); }
+.scan-summary {
+  margin: 2px 0 0;
+  font-size: 14px;
+  line-height: 1.7;
+  background: var(--fill);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.scan-summary.is-warn { background: #fbeed6; color: #7a4d00; }
+.scan-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 0 18px;
+}
+
+@media (max-width: 720px) {
+  .scan-result { grid-template-columns: minmax(0, 1fr); }
+  .scan-preview-wrap { max-width: 320px; width: 100%; margin: 0 auto; }
+}
+
 /* ================================ トースト ============================== */
 
 #toast-root {
@@ -879,8 +963,8 @@ body.is-playing #app { pointer-events: none; }
   .color-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
   .color-dot { width: 40px; height: 40px; }
   .color-label { font-size: 10px; }
-  /* けしゴム・おてほん・うめる・けす を 1 行に */
-  .tool-row { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-bottom: 0; }
+  /* けしゴム・おてほん・しゃしん・うめる・けす を 1 行に */
+  .tool-row { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; margin-bottom: 0; }
   .panel-note { display: none; }
   .tool-wide { padding: 10px 6px; font-size: 13px; }
   .btn-block { padding: 10px 6px; font-size: 13px; }

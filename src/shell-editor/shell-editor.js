@@ -9,6 +9,8 @@
  *                     置いた星をタップすると、いまの色に塗りかわる
  *   ③ うちあげる      下の大きなボタン
  *
+ * 紙に描いた玉を写真で読みとって始めることもできる（「しゃしんから」→ scan/）。
+ *
  * 置けない場所（外周からはみ出す・他の珠と重なる）には置かせないが、
  * すぐ近くに空きがあれば数ミリだけずらして置く（狙いが大まかでも置ける）。
  */
@@ -30,6 +32,7 @@ import {
 } from '../types/shell.js';
 import { uid } from '../core/rng.js';
 import * as player from '../player/player.js';
+import { openScanDialog } from '../scan/scan-dialog.js';
 
 let view = null;
 let canvasEl = null;
@@ -466,6 +469,12 @@ function buildToolPanel(root) {
         type: 'button',
         onClick: openPresets,
         html: uiIcon('brush') + '<span>おてほん</span>',
+      }),
+      el('button.btn.btn-ghost.btn-block', {
+        type: 'button',
+        title: 'かみに かいた はなびだまを しゃしんで よみとる',
+        onClick: openScanDialog,
+        html: uiIcon('camera') + '<span>しゃしんから</span>',
       }),
       el('button.btn.btn-ghost.btn-block', {
         type: 'button',
