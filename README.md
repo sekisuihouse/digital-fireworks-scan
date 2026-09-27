@@ -88,7 +88,15 @@ node server.mjs --port 8080
 PORT=8080 node server.mjs
 ```
 
-Node を使わず、他の静的サーバでも動きます（`file://` 直開きだけは ES Modules の制約で不可）。
+Node を使わず、他の静的サーバでも動きます。
+
+**`index.html` をダブルクリックで開いても動きます。** `file://` では ES Modules が読めないため、
+そのときだけ `src/` を 1 ファイルにまとめた `app.bundle.js` を読みこみます。
+`src/` を書きかえたら、ダブルクリック用のファイルも作り直してください（初回だけネット接続が必要）:
+
+```bash
+npm run build   # -> app.bundle.js を作り直す
+```
 
 ```bash
 python3 -m http.server 5180
@@ -684,7 +692,7 @@ digitalFireworks.player.launchShell(shell)
 
 | 症状 | 原因と対処 |
 | --- | --- |
-| 真っ白な画面／何も出ない | `file://` で直接開いている。ES Modules は使えないので `node server.mjs` 経由で開く |
+| 真っ白な画面／何も出ない | `app.bundle.js` が無い・古い。`npm run build` で作り直すか、`node server.mjs` 経由で開く |
 | 星が置けない | 円からはみ出すか、他の星と重なっている。赤い破線の円を避けて置く |
 | 音が鳴らない | ブラウザの自動再生制限。一度どれかのボタンを押すと鳴る。右上のスピーカーも確認 |
 | 保存できない | プライベートウィンドウなどで localStorage が使えない。通常ウィンドウで開く |

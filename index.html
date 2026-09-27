@@ -81,6 +81,22 @@
     <div id="modal-root"></div>
     <div id="toast-root"></div>
 
-    <script type="module" src="./src/main.js"></script>
+    <!--
+      index.html をダブルクリックで開いた（file://）ときは ES Modules が読めないので、
+      src/ を 1 ファイルにまとめた app.bundle.js（npm run build で作る）を読む。
+      サーバ経由（http/https）のときは src/main.js をそのまま読む。
+    -->
+    <script>
+      (function () {
+        var s = document.createElement('script');
+        if (location.protocol === 'file:') {
+          s.src = './app.bundle.js';
+        } else {
+          s.type = 'module';
+          s.src = './src/main.js';
+        }
+        document.body.appendChild(s);
+      })();
+    </script>
   </body>
 </html>
