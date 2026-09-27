@@ -1,7 +1,8 @@
 /**
  * ギャラリー画面
  * =========================================================================
- * 保存した 2.5号玉の一覧。打ち上げ / 編集 / 複製 / 削除ができる。
+ * 上: みんなの花火（アプリに入っている作品。だれが開いても見られる・消せない）
+ * 下: じぶんの花火（この端末に保存した 2.5号玉。打ち上げ / 編集 / 複製 / 削除ができる）
  * 「みんなの花火を打ち上げる」で、全部を順番に打ち上げ、最後にフィナーレ。
  */
 import { el, qs, clear, formatDate } from '../core/dom.js';
@@ -11,6 +12,12 @@ import { confirmDialog } from '../components/modal.js';
 import * as storage from '../storage/storage.js';
 import * as player from '../player/player.js';
 import { renderShellThumbnail } from '../components/shell-render.js';
+import { normalizeShell, cloneShell } from '../types/shell.js';
+import { uid } from '../core/rng.js';
+import { SHARED_SHELLS } from '../data/shared-gallery.js';
+
+/** みんなの花火（読みとり専用）。サムネイルは最初に表示したときに描く */
+const shared = SHARED_SHELLS.map((r) => ({ ...r, shell: normalizeShell(r.shell), thumbnail: '' }));
 
 let listEl = null;
 let headEl = null;
@@ -27,19 +34,22 @@ export function mountGallery(root, h = {}) {
 export function render() {
   if (!listEl) return;
   const records = storage.listShells();
+  // 同じ作品が「みんな」と「じぶん」の両方にあるときは、上映では 1 回だけ打ち上げる
+  const ownIds = new Set(records.map((r) => r.id));
+  const showRecords = [...shared.filter((r) => !ownIds.has(r.id)), ...records];
 
   clear(headEl);
   headEl.append(
     el('div.gallery-heading', {}, [
       el('h2.gallery-title', {}, ['ギャラリー']),
-      el('span.gallery-count', {}, [`${records.length} はつ`]),
+      el('span.gallery-count', {}, [`${showRecords.length} はつ`]),
     ]),
     el('div.gallery-actions', {}, [
       el('button.btn.btn-big.btn-accent', {
         type: 'button',
-        disabled: records.length === 0,
+        disabled: showRecords.length === 0,
         html: uiIcon('rocket') + '<span>みんなの花火を 打ち上げる</span>',
-        onClick: () => playShow(records),
+        onClick: () => playShow(showRecords),
       }),
       el('button.btn.btn-ghost', {
         type: 'button',
@@ -57,11 +67,16 @@ export function render() {
   );
 
   clear(listEl);
+  if (shared.length) {
+    listEl.append(sectionTitle('みんなの花火', shared.length));
+    for (const rec of shared) listEl.append(sharedCard(rec));
+    listEl.append(sectionTitle('じぶんの花火', records.length));
+  }
   if (!records.length) {
     listEl.append(
       el('div.gallery-empty', {}, [
         el('div.gallery-empty-emoji', {}, ['🎆']),
-        el('p', {}, ['まだ 花火玉が ありません']),
+        el('p', {}, ['まだ じぶんの 花火玉が ありません']),
         el('button.btn.btn-primary.btn-big', {
           type: 'button',
           html: uiIcon('brush') + '<span>つくりに いく</span>',
@@ -73,6 +88,49 @@ export function render() {
   }
 
   for (const rec of records) listEl.append(card(rec));
+}
+
+function sectionTitle(label, count) {
+  return el('h3.gallery-section', {}, [label, el('span.gallery-count', {}, [`${count} はつ`])]);
+}
+
+/** みんなの花火のカード（消せない。へんしゅうは コピーを ひらく） */
+function sharedCard(rec) {
+  if (!rec.thumbnail) rec.thumbnail = renderShellThumbnail(rec.shell, 256);
+  return el('article.g-card', {}, [
+    el('button.g-thumb', {
+      type: 'button',
+      title: 'うちあげる',
+      onClick: () => launch(rec),
+      html:
+        `<img src="${rec.thumbnail}" alt="${escapeHtml(rec.name)}" loading="lazy">` +
+        `<span class="g-play">${uiIcon('rocket')}</span>`,
+    }),
+    el('div.g-body', {}, [
+      el('div.g-name', { title: rec.name }, [rec.name]),
+      el('div.g-meta', {}, [`ほし ${rec.shell.pellets.length} こ`]),
+    ]),
+    el('div.g-actions', {}, [
+      el('button.icon-btn', {
+        type: 'button',
+        title: 'うちあげる',
+        html: uiIcon('rocket'),
+        onClick: () => launch(rec),
+      }),
+      el('button.icon-btn', {
+        type: 'button',
+        title: 'コピーして へんしゅう',
+        html: uiIcon('edit'),
+        onClick: () => {
+          // 新しい id にして開く -> 「ほぞん」すると じぶんの花火に入る
+          const copy = cloneShell(rec.shell);
+          copy.id = uid('shell');
+          copy.pellets = copy.pellets.map((p) => ({ ...p, id: uid('pel') }));
+          handlers.onEdit?.({ ...rec, id: copy.id, shell: copy });
+        },
+      }),
+    ]),
+  ]);
 }
 
 function card(rec) {
